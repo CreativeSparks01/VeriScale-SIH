@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" fill="none">
+  <rect width="40" height="40" rx="8" fill="#123B5D" stroke="#2a5880" stroke-width="1"/>
+  <!-- Precision Scale Symbol -->
+  <line x1="8" y1="14" x2="32" y2="14" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="10" x2="20" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Pivot node -->
+  <circle cx="20" cy="14" r="3" fill="#008B8B" stroke="#ffffff" stroke-width="1.5"/>
+  <!-- Scale pans -->
+  <path d="M 10 16 L 12 24 L 16 24 L 14 16" fill="none" stroke="#e0f2fe" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M 26 16 L 24 24 L 28 24 L 30 16" fill="none" stroke="#e0f2fe" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- Base -->
+  <line x1="14" y1="30" x2="26" y2="30" stroke="#00e5ff" stroke-width="2" stroke-linecap="round"/>
+</svg>
