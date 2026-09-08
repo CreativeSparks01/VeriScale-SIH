@@ -35,14 +35,16 @@ export default function InstrumentDetails() {
   );
 
   return (
-    <AppShell title="Instrument Details" subtitle={`${instrument.name} — ${instrument.serial}`} activePath="/instruments" actions={actions}>
-
-      {/* Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, color: VS.textMuted, marginBottom: 20 }}>
-        <button onClick={() => navigate('/instruments')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: VS.teal, fontFamily: 'inherit', fontSize: 12.5, padding: 0, fontWeight: 500 }}>Instruments</button>
-        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>chevron_right</span>
-        <span style={{ color: VS.textMain, fontWeight: 600 }}>{instrument.name}</span>
-      </div>
+    <AppShell 
+      title="Instrument Details" 
+      subtitle={`${instrument.name} — ${instrument.serial}`} 
+      activePath="/instruments" 
+      actions={actions}
+      breadcrumbs={[
+        { label: 'INSTRUMENTS', path: '/instruments' },
+        { label: instrument.name }
+      ]}
+    >
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 20 }}>
         {/* LEFT */}

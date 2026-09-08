@@ -35,10 +35,114 @@ const ADMIN_ITEMS = [
   { label: 'Settings',     icon: 'settings',       path: '/admin/settings' },
 ];
 
-export default function AppShell({ children, title, subtitle, activePath, actions }) {
+export const ROUTE_BREADCRUMBS = {
+  '/': [{ label: 'PORTAL', path: '/' }],
+  '/auth': [{ label: 'HOME', path: '/' }, { label: 'AUTHENTICATION' }],
+  '/dashboard': [{ label: 'PORTAL', path: '/' }, { label: 'DASHBOARD' }],
+  '/instruments': [{ label: 'DASHBOARD', path: '/dashboard' }, { label: 'INSTRUMENTS' }],
+  '/instruments/details': [{ label: 'INSTRUMENTS', path: '/instruments' }, { label: 'WT-100', path: '/instruments/details' }, { label: 'INSTRUMENT DETAILS' }],
+  '/instruments/add': [{ label: 'INSTRUMENTS', path: '/instruments' }, { label: 'REGISTER INSTRUMENT' }],
+  '/instruments/history': [{ label: 'INSTRUMENTS', path: '/instruments' }, { label: 'WT-100', path: '/instruments/details' }, { label: 'TEST HISTORY' }],
+  '/tests/select-instrument': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'SELECT INSTRUMENT' }],
+  '/tests/environmental-conditions': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'SELECT INSTRUMENT', path: '/tests/select-instrument' }, { label: 'CONDITIONS' }],
+  '/tests/test-selection': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'CONDITIONS', path: '/tests/environmental-conditions' }, { label: 'TEST SELECTION' }],
+  '/tests/workspace': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'WORKSPACE' }],
+  '/tests/accuracy': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'ACCURACY' }],
+  '/tests/eccentricity': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'ECCENTRIC LOADING' }],
+  '/tests/repeatability': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'REPEATABILITY' }],
+  '/tests/tare': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'TARE' }],
+  '/tests/zero': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'ZERO' }],
+  '/tests/environmental-influence': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'ENVIRONMENTAL INFLUENCE' }],
+  '/compliance': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'COMPLIANCE ASSESSMENT' }],
+  '/compliance/approval': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'COMPLIANCE', path: '/compliance' }, { label: 'REVIEW & APPROVAL' }],
+  '/compliance/evidence': [{ label: 'TESTS', path: '/tests/select-instrument' }, { label: 'TEST-012', path: '/tests/workspace' }, { label: 'COMPLIANCE', path: '/compliance' }, { label: 'EVIDENCE ATTACHMENTS' }],
+  '/reports/generate': [{ label: 'REPORTS', path: '/reports/repository' }, { label: 'TEST-012', path: '/compliance' }, { label: 'REPORT PREVIEW' }],
+  '/reports/repository': [{ label: 'REPORTS', path: '/reports/repository' }, { label: 'CERTIFICATE REPOSITORY' }],
+  '/reports/templates': [{ label: 'REPORTS', path: '/reports/repository' }, { label: 'REPORT TEMPLATES' }],
+  '/search': [{ label: 'PORTAL', path: '/dashboard' }, { label: 'GLOBAL SEARCH' }],
+  '/admin/audit-trail': [{ label: 'ADMINISTRATION', path: '/admin/settings' }, { label: 'AUDIT TRAIL' }],
+  '/admin/rules': [{ label: 'ADMINISTRATION', path: '/admin/settings' }, { label: 'OIML RULES' }],
+  '/admin/settings': [{ label: 'ADMINISTRATION', path: '/admin/settings' }, { label: 'SETTINGS' }],
+};
+
+export function Breadcrumbs({ crumbs, style = {} }) {
+  const navigate = useNavigate();
+  if (!crumbs || crumbs.length === 0) return null;
+
+  return (
+    <nav aria-label="Breadcrumb" style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap', gap: 2, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2, ...style }}>
+      {crumbs.map((crumb, idx) => {
+        const isLast = idx === crumbs.length - 1;
+        const canClick = !isLast && (crumb.path || crumb.onClick);
+        const isId = crumb.label && (crumb.label.startsWith('TEST-') || crumb.label.startsWith('WT-') || crumb.label.startsWith('TR-'));
+
+        return (
+          <span key={idx} style={{ display: 'inline-flex', alignItems: 'center' }}>
+            {idx > 0 && (
+              <span style={{ color: '#5B6B7A', margin: '0 5px', fontWeight: 600, fontSize: 11, opacity: 0.85, userSelect: 'none' }}>
+                &gt;
+              </span>
+            )}
+            {canClick ? (
+              <button
+                type="button"
+                onClick={() => crumb.onClick ? crumb.onClick() : navigate(crumb.path)}
+                title={`Go back to ${crumb.label}`}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: '2px 4px',
+                  margin: 0,
+                  borderRadius: 4,
+                  cursor: 'pointer',
+                  color: isId ? '#0B263D' : '#0284c7',
+                  fontWeight: isId ? 700 : 600,
+                  fontSize: 11,
+                  fontFamily: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'uppercase',
+                  transition: 'all 0.15s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#008B8B';
+                  e.currentTarget.style.textDecoration = 'underline';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = isId ? '#0B263D' : '#0284c7';
+                  e.currentTarget.style.textDecoration = 'none';
+                }}
+              >
+                {crumb.label}
+              </button>
+            ) : (
+              <span
+                style={{
+                  color: isLast ? '#172B3A' : '#5B6B7A',
+                  fontWeight: isLast ? 700 : 600,
+                  fontSize: 11,
+                  padding: '2px 4px',
+                }}
+              >
+                {crumb.label}
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </nav>
+  );
+}
+
+export default function AppShell({ children, title, subtitle, activePath, actions, breadcrumbs }) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = activePath || location.pathname;
+
+  const crumbs = breadcrumbs || ROUTE_BREADCRUMBS[location.pathname] || (
+    title ? [{ label: 'PORTAL', path: '/dashboard' }, { label: title.toUpperCase() }] : null
+  );
 
   const isActive = (path) => currentPath === path || currentPath.startsWith(path + '/');
 
@@ -198,20 +302,21 @@ export default function AppShell({ children, title, subtitle, activePath, action
 
         {/* TOPBAR */}
         <header style={{
-          position: 'sticky', top: 0, height: 64, background: C.topbar,
+          position: 'sticky', top: 0, minHeight: 68, background: C.topbar,
           backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
           borderBottom: `1px solid ${C.border}`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '0 32px', zIndex: 40,
+          padding: '10px 32px', zIndex: 40,
           boxShadow: '0 1px 8px rgba(11,38,61,0.04)',
         }}>
-          {/* Page Title */}
-          <div>
+          {/* Page Title & Breadcrumbs */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center' }}>
+            <Breadcrumbs crumbs={crumbs} />
             <h1 style={{ fontSize: 17, fontWeight: 700, color: C.textMain, lineHeight: 1.2, margin: 0 }}>
               {title}
             </h1>
             {subtitle && (
-              <p style={{ fontSize: 12, color: C.textMuted, margin: '2px 0 0', lineHeight: 1 }}>
+              <p style={{ fontSize: 11.5, color: C.textMuted, margin: '2px 0 0', lineHeight: 1.2 }}>
                 {subtitle}
               </p>
             )}
